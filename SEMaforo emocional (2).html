@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semáforo de Emociones - Zona Roja</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js para la interactividad -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .animate-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#fde8e8]">
+
+    <div x-data="{ 
+        selected: null,
+        redEmotions: [
+            {
+                id: 1,
+                nombre: 'Ira',
+                emoji: '😡',
+                descripcion: 'Reacción de irritación o enfado ante una ofensa o frustración.',
+                comoFunciona: 'La amígdala se hiperactiva y libera adrenalina y cortisol. El ritmo cardíaco y la presión arterial aumentan rápidamente.',
+                comoSeActiva: 'Injusticias, límites traspasados, frustración por metas bloqueadas o sentirse amenazado.',
+                comoPotenciar: 'Redirigir la energía hacia la asertividad y la resolución de problemas en lugar de la agresión.',
+                comoControlar: 'Tiempo fuera, respiración profunda, ejercicio físico y expresar el malestar de forma calmada.'
+            },
+            {
+                id: 2,
+                nombre: 'Miedo',
+                emoji: '😨',
+                descripcion: 'Sensación de angustia por la presencia de un peligro real o imaginario.',
+                comoFunciona: 'Se activa el modo lucha-o-huida. La sangre se dirige a las piernas, las pupilas se dilatan y el cuerpo se tensa.',
+                comoSeActiva: 'Inseguridad, peligros físicos, amenazas a la autoestima o situaciones desconocidas.',
+                comoPotenciar: 'Usarlo como señal de protección y prudencia; ayuda a prepararse mejor ante desafíos.',
+                comoControlar: 'Exposición gradual, racionalizar el pensamiento, técnicas de relajación y buscar apoyo.'
+            },
+            {
+                id: 3,
+                nombre: 'Asco',
+                emoji: '🤢',
+                descripcion: 'Sensación de fuerte desagrado ante algo que consideramos repugnante.',
+                comoFunciona: 'Activa la ínsula cerebral. Genera una respuesta física de rechazo para protegernos de sustancias tóxicas o situaciones nocivas.',
+                comoSeActiva: 'Olores desagradables, alimentos en mal estado o comportamientos morales que rechazamos.',
+                comoPotenciar: 'Seguir la intuición para evitar ambientes o personas que nos resultan emocionalmente tóxicos.',
+                comoControlar: 'Analizar si el rechazo es racional o prejuicioso; alejarse de la fuente del estímulo.'
+            },
+            {
+                id: 4,
+                nombre: 'Tristeza Profunda',
+                emoji: '💔',
+                descripcion: 'Dolor emocional profundo que suele aparecer ante una pérdida significativa.',
+                comoFunciona: 'Reduce drásticamente la energía corporal. El cerebro pide aislamiento para procesar el duelo y reconstruirse.',
+                comoSeActiva: 'Pérdidas de seres queridos, rupturas, fracasos importantes o decepciones profundas.',
+                comoPotenciar: 'Permitirse sentirla para sanar; la tristeza invita a la reflexión y fortalece la empatía.',
+                comoControlar: 'Buscar conexión social, evitar la rumiación excesiva y establecer pequeñas metas diarias.'
+            },
+            {
+                id: 5,
+                nombre: 'Ansiedad',
+                emoji: '😰',
+                descripcion: 'Estado de inquietud y excitación extrema ante una preocupación constante.',
+                comoFunciona: 'El cerebro está en alerta máxima por peligros futuros no definidos. Se genera un ciclo de pensamientos negativos.',
+                comoSeActiva: 'Exceso de responsabilidades, incertidumbre crónica o presión social.',
+                comoPotenciar: 'Usarla como motor para organizar y planificar, siempre que sea en niveles bajos.',
+                comoControlar: 'Grounding (5-4-3-2-1), limitar cafeína, meditación y vivir el momento presente.'
+            },
+            {
+                id: 6,
+                nombre: 'Culpa',
+                emoji: '😔',
+                descripcion: 'Sentimiento de responsabilidad por haber cometido una falta o daño.',
+                comoFunciona: 'Involucra la corteza orbitofrontal. Funciona como una alarma moral que nos indica que hemos roto nuestros valores.',
+                comoSeActiva: 'Lastimar a alguien, incumplir promesas o actuar en contra de lo que creemos correcto.',
+                comoPotenciar: 'Transformarla en reparación: pedir perdón y aprender de la experiencia para no repetirla.',
+                comoControlar: 'Diferenciar entre culpa real (acción) y culpa tóxica (autocastigo); practicar la autocompasión.'
+            }
+        ]
+    }">
+        
+        <!-- Header -->
+        <div class="text-center pt-12 pb-6 px-4">
+            <div class="text-4xl mb-2">🚦</div>
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
+                Semáforo de Emociones
+            </h1>
+            <p class="mt-3 text-gray-500 text-base md:text-lg max-w-md mx-auto leading-relaxed">
+                Explora las emociones de alerta, aprende cómo funcionan y cómo gestionarlas en tu vida diaria.
+            </p>
+        </div>
+
+        <!-- Zone label -->
+        <div class="flex justify-center mb-8">
+            <div class="flex items-center gap-2 bg-white/60 border border-red-200 rounded-full px-4 py-1.5 shadow-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                <span class="text-red-600 text-xs font-bold tracking-widest uppercase">
+                    Zona Roja — Emociones de Alerta
+                </span>
+            </div>
+        </div>
+
+        <!-- Cards grid -->
+        <div class="max-w-5xl mx-auto px-4 pb-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <template x-for="(emotion, index) in redEmotions" :key="emotion.id">
+                    <div 
+                        @click="selected = (selected === emotion.id ? null : emotion.id)"
+                        class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-red-100 hover:border-red-400 hover:-translate-y-1 overflow-hidden"
+                    >
+                        <!-- Card Header -->
+                        <div class="p-5 flex items-center gap-3 bg-gradient-to-r from-red-500 to-rose-600">
+                            <span class="text-4xl" x-text="emotion.emoji"></span>
+                            <div>
+                                <h2 class="text-xl font-bold text-white" x-text="emotion.nombre"></h2>
+                                <p class="text-sm text-red-100 opacity-90" x-text="emotion.descripcion"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card Content (Selected) -->
+                        <div x-show="selected === emotion.id" x-transition class="p-5 space-y-4 text-sm text-gray-700 animate-in">
+                            
+                            <div class="rounded-xl border p-3 bg-blue-50 border-blue-200 text-blue-800">
+                                <p class="font-bold mb-1">🧠 ¿Cómo funciona?</p>
+                                <p class="leading-relaxed opacity-90" x-text="emotion.comoFunciona"></p>
+                            </div>
+
+                            <div class="rounded-xl border p-3 bg-yellow-50 border-yellow-200 text-yellow-800">
+                                <p class="font-bold mb-1">⚡ ¿Cómo se activa?</p>
+                                <p class="leading-relaxed opacity-90" x-text="emotion.comoSeActiva"></p>
+                            </div>
+
+                            <div class="rounded-xl border p-3 bg-green-50 border-green-200 text-green-800">
+                                <p class="font-bold mb-1">🚀 ¿Cómo potenciarla?</p>
+                                <p class="leading-relaxed opacity-90" x-text="emotion.comoPotenciar"></p>
+                            </div>
+
+                            <div class="rounded-xl border p-3 bg-purple-50 border-purple-200 text-purple-800">
+                                <p class="font-bold mb-1">🎯 ¿Cómo controlarla?</p>
+                                <p class="leading-relaxed opacity-90" x-text="emotion.comoControlar"></p>
+                            </div>
+
+                        </div>
+
+                        <!-- Card Footer (Not Selected) -->
+                        <div x-show="selected !== emotion.id" class="px-5 py-3 text-xs font-bold flex items-center gap-1 text-red-500 uppercase tracking-tight">
+                            <span>Explorar emoción</span>
+                            <span>→</span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t border-red-200 bg-white/40 py-6 text-center">
+            <p class="text-gray-500 text-sm">
+                🔴 Conocer tus emociones es el primer paso hacia el bienestar emocional.
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>
